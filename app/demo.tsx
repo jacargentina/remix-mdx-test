@@ -1,14 +1,7 @@
-import { useContext } from "react";
-import AppContext from "~/context";
-
-declare global {
-  var getContext: () => typeof AppContext;
-}
+import { useApp } from "~/context";
 
 const Demo = () => {
-  const ctx = useContext(
-    typeof getContext === "function" ? getContext() : AppContext
-  );
+  const ctx = useApp();
 
   return (
     <div>

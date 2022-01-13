@@ -2,14 +2,17 @@ import { json, useLoaderData } from "remix";
 import { convert } from "~/utils.server";
 import { getMDXComponent } from "mdx-bundler/client";
 import { useMemo } from "react";
-import AppContext, { AppContextWrapper } from "~/context";
+import { AppProvider, useApp } from "~/context";
 import Demo from "~/demo";
 
 const source = `
 
+import { AppProvider } from './context';
 import Demo from './demo'
 
-<Demo />
+<AppProvider>
+  <Demo />
+</AppProvider>
   `.trim();
 
 export let loader = async () => {
@@ -20,18 +23,15 @@ export let loader = async () => {
 const Index = () => {
   const { code } = useLoaderData();
 
-  const Component = useMemo(
-    () => getMDXComponent(code, { getContext: () => AppContext }),
-    [code]
-  );
+  const Component = useMemo(() => getMDXComponent(code), [code]);
 
   return (
-    <AppContextWrapper>
+    <AppProvider>
       <h1>Demo rendered via JSX</h1>
       <Demo />
       <h1>Demo rendered via MDX</h1>
       <Component />
-    </AppContextWrapper>
+    </AppProvider>
   );
 };
 
